@@ -7,6 +7,7 @@ public class CardObject : MonoBehaviour
     private Card card;
     private SpriteRenderer spriteRenderer;
     public GameManager gameManager;
+    private bool flipped = false;
 
     private void Start()
     {
@@ -16,7 +17,31 @@ public class CardObject : MonoBehaviour
     public void setValue(Card card)
     {
         this.card = card;
-        GetComponent<SpriteRenderer>().sprite = gameManager.getCardSprite(card.suit, card.value);
+        if (spriteRenderer == null)
+        {
+            spriteRenderer = (SpriteRenderer)GetComponent(typeof(SpriteRenderer));
+        }
+        spriteRenderer.sprite = gameManager.getCardSprite(card.suit, card.value);
+    }
+
+    public void setFlipped(bool flipped)
+    {
+        this.flipped = flipped;
+
+        if (spriteRenderer == null)
+        {
+            spriteRenderer = (SpriteRenderer)GetComponent(typeof(SpriteRenderer));
+        }
+        spriteRenderer.sprite = gameManager.getCardSprite(card.suit, card.value);
+
+        if (flipped)
+        {
+            spriteRenderer.sprite = gameManager.getCardBackSprite();
+        }
+        else
+        {
+            spriteRenderer.sprite = gameManager.getCardSprite(card.suit, card.value);
+        }
     }
 
 }

@@ -131,6 +131,7 @@ GameObject:
   - component: {fileID: 519420032}
   - component: {fileID: 519420031}
   - component: {fileID: 519420029}
+  - component: {fileID: 519420030}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -146,6 +147,27 @@ AudioListener:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 519420028}
   m_Enabled: 1
+--- !u!114 &519420030
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 519420028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d48f6fb7ed572004d8a0f1f0860fb77e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  curShader: {fileID: 4800000, guid: faaae406d4df01c4892637af0f614627, type: 3}
+  distortion: 1
+  gamma: 1.5
+  yExtra: 0.5
+  curvatureSet1: 0.5
+  curvatureSet2: 1
+  dotWeight: 1
+  rgb1: {r: 1, g: 0.49771386, b: 0, a: 1}
+  rgb2: {r: 1, g: 1, b: 1, a: 1}
 --- !u!20 &519420031
 Camera:
   m_ObjectHideFlags: 0
@@ -282,7 +304,7 @@ GameObject:
   - component: {fileID: 1140001128}
   - component: {fileID: 1140001127}
   m_Layer: 5
-  m_Name: Button
+  m_Name: Deal Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -352,7 +374,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1992122554}
-        m_MethodName: dealCards
+        m_MethodName: dealPressed
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -531,11 +553,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cardSpace: 20
-  dealerhandY: 100
+  dealerHandY: 100
   playerHandY: -100
   cardObjectPrefab: {fileID: 3243124826016292089, guid: aea0d0fde9ce4814ebaa8c289855abfc,
     type: 3}
   canvas: {fileID: 1676487579}
+  dealButton: {fileID: 1140001127}
+  dealButtonText: {fileID: 2138066795}
 --- !u!4 &1992122555
 Transform:
   m_ObjectHideFlags: 0
@@ -608,11 +632,11 @@ MonoBehaviour:
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 14
+    m_Font: {fileID: 12800000, guid: 8f5a6a3d6f5acfc4cb69827facad8a39, type: 3}
+    m_FontSize: 18
     m_FontStyle: 0
     m_BestFit: 0
-    m_MinSize: 10
+    m_MinSize: 1
     m_MaxSize: 40
     m_Alignment: 4
     m_AlignByGeometry: 0

@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -10,23 +11,30 @@ public class GameManager : MonoBehaviour
     public const int CARD_BACK = 54;
 
     public int cardSpace = 20;
-    public int dealerhandY = 100;
+    public int dealerHandY = 100;
     public int playerHandY = -100;
 
     public GameObject cardObjectPrefab;
     public Canvas canvas;
+    public Button dealButton;
+    public Text dealButtonText;
 
-    Sprite[] cardSprites;
-    List<Card> deck;
-    List<Card> cards;
-    List<CardObject> dealerHand;
-    List<CardObject> playerHand;
-    List<GameObject> cardGameObjects;
+
+    private Sprite[] cardSprites;
+    private List<Card> deck;
+    private List<Card> cards;
+    private List<CardObject> dealerHand;
+    private List<CardObject> playerHand;
+    private List<GameObject> cardGameObjects;
 
     public enum Suit
     {
         clubs, diamonds, hearts, spades
     }
+
+    private const int STATE_START = 0;
+    private const int STATE_CONTINUE = 1;
+    private const int STATE_END = 2;
 
     int gameState = 0;
 
@@ -74,47 +82,62 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void dealCards()
+    public void dealPressed()
     {
-        while (dealerHand.Count > 0)
+        if (gameState == STATE_START)
         {
-            dealerHand[0].gameObject.SetActive(false);
-            dealerHand.RemoveAt(0);
+            dealButtonText.text = "Hit";
+            gameState = STATE_CONTINUE;
+
+            while (dealerHand.Count > 0)
+            {
+                dealerHand[0].gameObject.SetActive(false);
+                dealerHand.RemoveAt(0);
+            }
+
+            while (playerHand.Count > 0)
+            {
+                playerHand[0].gameObject.SetActive(false);
+                playerHand.RemoveAt(0);
+            }
+
+            dealerHand.Add(dealCard());
+            dealerHand.Add(dealCard());
+            dealerHand[1].setFlipped(true);
+
+            playerHand.Add(dealCard());
+            playerHand.Add(dealCard());
+
+            adjustPlayerHand(dealerHand, dealerHandY);
+            adjustPlayerHand(playerHand, playerHandY);
+
+        }else if (gameState == STATE_CONTINUE)
+        {
+            playerHand.Add(dealCard());
+            adjustPlayerHand(playerHand, playerHandY);
         }
 
-        while (playerHand.Count > 0)
-        {
-            playerHand[0].gameObject.SetActive(false);
-            playerHand.RemoveAt(0);
-        }
+    }
 
-        dealerHand.Add(dealCard());
-        dealerHand.Add(dealCard());
-
-        playerHand.Add(dealCard());
-        playerHand.Add(dealCard());
-
-        float cardStartX = dealerHand.Count * cardSpace * -0.5f;
-
-        foreach (CardObject cardObject in dealerHand)
-        {
-            Vector3 pos = cardObject.gameObject.GetComponent<RectTransform>().anchoredPosition;
-            pos.x = cardStartX + cardSpace * dealerHand.IndexOf(cardObject);
-            pos.y = dealerhandY;
-            cardObject.gameObject.GetComponent<RectTransform>().anchoredPosition = pos;
-        }
-
+    private void adjustPlayerHand(List<CardObject> playerHand, int handY)
+    {
+        float cardStartX = playerHand.Count * cardSpace * -0.5f + cardSpace * 0.5f;
         foreach (CardObject cardObject in playerHand)
         {
             Vector3 pos = cardObject.gameObject.GetComponent<RectTransform>().anchoredPosition;
             pos.x = cardStartX + cardSpace * playerHand.IndexOf(cardObject);
-            pos.y = playerHandY;
+            pos.y = handY;
             cardObject.gameObject.GetComponent<RectTransform>().anchoredPosition = pos;
         }
     }
 
     private CardObject dealCard()
     {
+        if(deck.Count < 1)
+        {
+            fillDeck();
+        }
+
         int cardIndex = UnityEngine.Random.Range(0, deck.Count - 1);
         GameObject cardGameObject = null;
         foreach (GameObject obj in cardGameObjects)
