@@ -10,6 +10,8 @@ public class GameManager : MonoBehaviour
     public const int RED_JOKER = 53;
     public const int CARD_BACK = 54;
 
+    private const int BUTTON_PADDING = 20;
+
     public int cardSpace = 20;
     public int dealerHandY = 100;
     public int playerHandY = -100;
@@ -17,8 +19,8 @@ public class GameManager : MonoBehaviour
     public GameObject cardObjectPrefab;
     public Canvas canvas;
     public Button dealButton;
-    public Text dealButtonText;
-
+    private Text dealButtonText;
+    public Button standButton;
 
     private Sprite[] cardSprites;
     private List<Card> deck;
@@ -68,6 +70,8 @@ public class GameManager : MonoBehaviour
             cardGameObjects.Add(gameObject);
         }
 
+        dealButtonText = dealButton.GetComponentInChildren<Text>();
+
     }
 
     private void fillDeck()
@@ -82,11 +86,21 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void standPressed()
+    {
+
+    }
+
     public void dealPressed()
     {
         if (gameState == STATE_START)
         {
             dealButtonText.text = "Hit";
+            setAnchoredPosition(dealButton.gameObject, dealButton.gameObject.GetComponent<RectTransform>().sizeDelta.x * 0.5f + BUTTON_PADDING * 0.5f, 0);
+
+            standButton.gameObject.SetActive(true);
+            setAnchoredPosition(standButton.gameObject, -standButton.gameObject.GetComponent<RectTransform>().sizeDelta.x * 0.5f - BUTTON_PADDING * 0.5f, 0);
+
             gameState = STATE_CONTINUE;
 
             while (dealerHand.Count > 0)
@@ -111,7 +125,8 @@ public class GameManager : MonoBehaviour
             adjustPlayerHand(dealerHand, dealerHandY);
             adjustPlayerHand(playerHand, playerHandY);
 
-        }else if (gameState == STATE_CONTINUE)
+        }
+        else if (gameState == STATE_CONTINUE)
         {
             playerHand.Add(dealCard());
             adjustPlayerHand(playerHand, playerHandY);
@@ -124,16 +139,22 @@ public class GameManager : MonoBehaviour
         float cardStartX = playerHand.Count * cardSpace * -0.5f + cardSpace * 0.5f;
         foreach (CardObject cardObject in playerHand)
         {
-            Vector3 pos = cardObject.gameObject.GetComponent<RectTransform>().anchoredPosition;
-            pos.x = cardStartX + cardSpace * playerHand.IndexOf(cardObject);
-            pos.y = handY;
-            cardObject.gameObject.GetComponent<RectTransform>().anchoredPosition = pos;
+            setAnchoredPosition(cardObject.gameObject, cardStartX + cardSpace * playerHand.IndexOf(cardObject), handY);
         }
+    }
+
+    private void setAnchoredPosition(GameObject gObject, float x, int y)
+    {
+        RectTransform rectTransform = gObject.GetComponent<RectTransform>();
+        Vector3 pos = rectTransform.anchoredPosition;
+        pos.x = x;
+        pos.y = y;
+        rectTransform.anchoredPosition = pos;
     }
 
     private CardObject dealCard()
     {
-        if(deck.Count < 1)
+        if (deck.Count < 1)
         {
             fillDeck();
         }

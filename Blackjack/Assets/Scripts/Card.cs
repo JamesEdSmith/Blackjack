@@ -2,7 +2,7 @@
 using System;
 using System.Collections;
 
-public struct Card
+public class Card
 {
     public GameManager.Suit suit;
     public int value;
