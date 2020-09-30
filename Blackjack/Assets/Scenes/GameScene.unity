@@ -936,6 +936,7 @@ MonoBehaviour:
   canvas: {fileID: 1676487579}
   dealButton: {fileID: 1140001127}
   standButton: {fileID: 867857721}
+  buttonTotalTime: 10
 --- !u!4 &1992122555
 Transform:
   m_ObjectHideFlags: 0

@@ -22,6 +22,12 @@ public class GameManager : MonoBehaviour
     private Text dealButtonText;
     public Button standButton;
 
+    private Vector2 dealButtonNewPosition;
+    private Vector2 standButtonNewPosition;
+
+    public float buttonTotalTime;
+    private float buttonTimer;
+
     private Sprite[] cardSprites;
     private List<Card> deck;
     private List<Card> cards;
@@ -71,6 +77,10 @@ public class GameManager : MonoBehaviour
         }
 
         dealButtonText = dealButton.GetComponentInChildren<Text>();
+        Vector2 position = dealButton.gameObject.GetComponent<RectTransform>().anchoredPosition;
+        dealButtonNewPosition = new Vector2(position.x, position.y);
+        position = standButton.gameObject.GetComponent<RectTransform>().anchoredPosition;
+        standButtonNewPosition = new Vector2(position.x, position.y);
 
     }
 
@@ -96,10 +106,14 @@ public class GameManager : MonoBehaviour
         if (gameState == STATE_START)
         {
             dealButtonText.text = "Hit";
-            setAnchoredPosition(dealButton.gameObject, dealButton.gameObject.GetComponent<RectTransform>().sizeDelta.x * 0.5f + BUTTON_PADDING * 0.5f, 0);
-
             standButton.gameObject.SetActive(true);
-            setAnchoredPosition(standButton.gameObject, -standButton.gameObject.GetComponent<RectTransform>().sizeDelta.x * 0.5f - BUTTON_PADDING * 0.5f, 0);
+            buttonTimer = 0;
+
+            float x = dealButton.gameObject.GetComponent<RectTransform>().anchoredPosition.x + dealButton.gameObject.GetComponent<RectTransform>().sizeDelta.x * 0.5f + BUTTON_PADDING * 0.5f;
+            dealButtonNewPosition = new Vector2(x, dealButton.gameObject.GetComponent<RectTransform>().anchoredPosition.y);
+      
+            x = standButton.gameObject.GetComponent<RectTransform>().anchoredPosition.x - standButton.gameObject.GetComponent<RectTransform>().sizeDelta.x * 0.5f - BUTTON_PADDING * 0.5f;
+            standButtonNewPosition = new Vector2(x, standButton.gameObject.GetComponent<RectTransform>().anchoredPosition.y);
 
             gameState = STATE_CONTINUE;
 
@@ -189,6 +203,23 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(buttonTimer < buttonTotalTime)
+        {
+            buttonTimer += Time.deltaTime;
+        }
 
+        float easedValue = EasingFunction.EaseOutElastic(0, 1f, buttonTimer / buttonTotalTime);
+
+        Vector2 position = dealButton.gameObject.GetComponent<RectTransform>().anchoredPosition;
+        if (position.x != dealButtonNewPosition.x)
+        {
+            dealButton.gameObject.GetComponent<RectTransform>().anchoredPosition = Vector2.LerpUnclamped(position, dealButtonNewPosition, easedValue);
+        }
+
+        position = standButton.gameObject.GetComponent<RectTransform>().anchoredPosition;
+        if (position.x != standButtonNewPosition.x)
+        {
+            standButton.gameObject.GetComponent<RectTransform>().anchoredPosition = Vector2.Lerp(position, standButtonNewPosition, easedValue);
+        }
     }
 }
