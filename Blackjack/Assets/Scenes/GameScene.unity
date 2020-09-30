@@ -160,13 +160,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   curShader: {fileID: 4800000, guid: faaae406d4df01c4892637af0f614627, type: 3}
-  distortion: 1
+  distortion: 0.8
   gamma: 1.5
   yExtra: 0.5
   curvatureSet1: 0.5
   curvatureSet2: 1
   dotWeight: 1
-  rgb1: {r: 1, g: 0.49771386, b: 0, a: 1}
+  rgb1: {r: 1, g: 0.6086958, b: 0, a: 1}
   rgb2: {r: 1, g: 1, b: 1, a: 1}
 --- !u!20 &519420031
 Camera:
